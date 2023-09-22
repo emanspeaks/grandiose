@@ -63,3 +63,4 @@ typings/
 
 # node-gyp built artifacts
 ndi
+build/

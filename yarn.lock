@@ -67,12 +67,12 @@ nan@^2.14.0:
 
 node-addon-api@^7.0.0:
   version "7.0.0"
-  resolved "https://registry.yarnpkg.com/node-addon-api/-/node-addon-api-7.0.0.tgz#8136add2f510997b3b94814f4af1cce0b0e3962e"
+  resolved "https://registry.npmjs.org/node-addon-api/-/node-addon-api-7.0.0.tgz"
   integrity sha512-vgbBJTS4m5/KkE16t5Ly0WW9hz46swAstv0hYYwMtbG7AznRhNyfLRe8HZAiWIpcHzoO7HxhLuBQj9rJ/Ho0ZA==
 
 pkg-prebuilds@^0.2.1:
   version "0.2.1"
-  resolved "https://registry.yarnpkg.com/pkg-prebuilds/-/pkg-prebuilds-0.2.1.tgz#4b91f410ab600df4eb657634d623549cc188c5ed"
+  resolved "https://registry.npmjs.org/pkg-prebuilds/-/pkg-prebuilds-0.2.1.tgz"
   integrity sha512-FdOlDiRqRL7i9aYzQflhGWCoiJf/8u6Qgzq48gKsRDYejtfjvGb1U5QGSzllcqpNg2a8Swx/9fMgtuVefwU+zw==
   dependencies:
     yargs "^17.5.1"

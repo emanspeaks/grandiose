@@ -241,41 +241,41 @@ bool validAudioFormat(Grandiose_audio_format_e format) {
   }
 }
 
-// Make a native source object from components of a source object
-napi_status makeNativeSource(napi_env env, napi_value source, NDIlib_source_t *result) {
-  const char* name = nullptr;
-  const char* url = nullptr;
-  napi_status status;
-  napi_valuetype type;
-  napi_value namev, urlv;
-  size_t namel, urll;
+// // Make a native source object from components of a source object
+// napi_status makeNativeSource(napi_env env, napi_value source, NDIlib_source_t *result) {
+//   const char* name = nullptr;
+//   const char* url = nullptr;
+//   napi_status status;
+//   napi_valuetype type;
+//   napi_value namev, urlv;
+//   size_t namel, urll;
 
-  status = napi_get_named_property(env, source, "name", &namev);
-  PASS_STATUS;
-  status = napi_get_named_property(env, source, "urlAddress", &urlv);
-  PASS_STATUS;
+//   status = napi_get_named_property(env, source, "name", &namev);
+//   PASS_STATUS;
+//   status = napi_get_named_property(env, source, "urlAddress", &urlv);
+//   PASS_STATUS;
 
-  status = napi_typeof(env, namev, &type);
-  PASS_STATUS;
-  if (type == napi_string) {
-    status = napi_get_value_string_utf8(env, namev, nullptr, 0, &namel);
-    PASS_STATUS;
-    name = (char *) malloc(namel + 1);
-    status = napi_get_value_string_utf8(env, namev, (char*) name, namel + 1, &namel);
-    PASS_STATUS;
-  }
+//   status = napi_typeof(env, namev, &type);
+//   PASS_STATUS;
+//   if (type == napi_string) {
+//     status = napi_get_value_string_utf8(env, namev, nullptr, 0, &namel);
+//     PASS_STATUS;
+//     name = (char *) malloc(namel + 1);
+//     status = napi_get_value_string_utf8(env, namev, (char*) name, namel + 1, &namel);
+//     PASS_STATUS;
+//   }
 
-  status = napi_typeof(env, urlv, &type);
-  PASS_STATUS;
-  if (type == napi_string) {
-    status = napi_get_value_string_utf8(env, urlv, nullptr, 0, &urll);
-    PASS_STATUS;
-    url = (char *) malloc(urll + 1);
-    status = napi_get_value_string_utf8(env, urlv, (char*) url, urll + 1, &urll);
-    PASS_STATUS;
-  }
+//   status = napi_typeof(env, urlv, &type);
+//   PASS_STATUS;
+//   if (type == napi_string) {
+//     status = napi_get_value_string_utf8(env, urlv, nullptr, 0, &urll);
+//     PASS_STATUS;
+//     url = (char *) malloc(urll + 1);
+//     status = napi_get_value_string_utf8(env, urlv, (char*) url, urll + 1, &urll);
+//     PASS_STATUS;
+//   }
 
-  result->p_ndi_name = name;
-  result->p_url_address = url;
-  return napi_ok;
-}
+//   result->p_ndi_name = name;
+//   result->p_url_address = url;
+//   return napi_ok;
+// }
