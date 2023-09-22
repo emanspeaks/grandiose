@@ -15,6 +15,7 @@
 
 #include <cstdio>
 #include <chrono>
+#include <cstddef>
 #include <Processing.NDI.Lib.h>
 
 #ifdef _WIN32
@@ -29,68 +30,51 @@
 #include "grandiose_find.h"
 #include "grandiose_send.h"
 #include "grandiose_receive.h"
-#include "grandiose_routing.h"
-#include "node_api.h"
+#include "napi.h"
 
-napi_value version(napi_env env, napi_callback_info info) {
-  napi_status status;
-
-  const char* ndiVersion = NDIlib_version();
-  napi_value result;
-  status = napi_create_string_utf8(env, ndiVersion, NAPI_AUTO_LENGTH, &result);
-  CHECK_STATUS;
-
-  return result;
+Napi::Value version(const Napi::CallbackInfo &info)
+{
+  const char *ndiVersion = NDIlib_version();
+  return Napi::String::New(info.Env(), ndiVersion);
 }
 
-napi_value isSupportedCPU(napi_env env, napi_callback_info info) {
-  napi_status status;
-
-  napi_value result;
-  status = napi_get_boolean(env, NDIlib_is_supported_CPU(), &result);
-  CHECK_STATUS;
-
-  return result;
+Napi::Value isSupportedCPU(const Napi::CallbackInfo &info)
+{
+  return Napi::Boolean::New(info.Env(), NDIlib_is_supported_CPU());
 }
 
-napi_value initialize(napi_env env, napi_callback_info info) {
-  napi_status status;
+struct GrandioseInstanceData
+{
+  std::unique_ptr<Napi::FunctionReference> finder;
+};
 
-  bool ok = NDIlib_initialize();
-  napi_value result;
-  status = napi_get_boolean(env, ok, &result);
-  CHECK_STATUS;
+Napi::Object Init(Napi::Env env, Napi::Object exports)
+{
 
-  return result;
-}
+  // Not required, but "correct" (see the SDK documentation).
+  if (!NDIlib_initialize()) // TODO - throw in a way that users can catch
+    return exports;
 
-napi_value destroy(napi_env env, napi_callback_info info) {
-  napi_status status;
-
-  NDIlib_destroy();
-  napi_value result;
-  status = napi_get_boolean(env, true, &result);
-  CHECK_STATUS;
-
-  return result;
-}
-
-napi_value Init(napi_env env, napi_value exports) {
   napi_status status;
   napi_property_descriptor desc[] = {
-    DECLARE_NAPI_METHOD("version", version),
-    DECLARE_NAPI_METHOD("isSupportedCPU", isSupportedCPU),
-    DECLARE_NAPI_METHOD("initialize", initialize),
-    DECLARE_NAPI_METHOD("destroy", destroy),
-    DECLARE_NAPI_METHOD("find", find),
-    DECLARE_NAPI_METHOD("send", send),
-    DECLARE_NAPI_METHOD("receive", receive),
-    DECLARE_NAPI_METHOD("routing", routing)
-   };
-  status = napi_define_properties(env, exports, sizeof(desc) / sizeof(desc[0]), desc);
-  CHECK_STATUS;
+      DECLARE_NAPI_METHOD("send", send),
+      DECLARE_NAPI_METHOD("receive", receive)};
+  status = napi_define_properties(env, exports, 2, desc);
+
+  exports.Set("version", Napi::Function::New(env, version));
+  exports.Set("isSupportedCPU", Napi::Function::New(env, isSupportedCPU));
+
+  auto finderRef = GrandioseFinder::Initialize(env, exports);
+
+  // Store the constructor as the add-on instance data. This will allow this
+  // add-on to support multiple instances of itself running on multiple worker
+  // threads, as well as multiple instances of itself running in different
+  // contexts on the same thread.
+  env.SetInstanceData<GrandioseInstanceData>(new GrandioseInstanceData{
+      std::move(finderRef),
+  });
 
   return exports;
 }
 
-NAPI_MODULE(nodencl, Init)
+NODE_API_MODULE(grandiose, Init)

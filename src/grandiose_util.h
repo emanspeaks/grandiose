@@ -19,8 +19,12 @@
 #include <chrono>
 #include <stdio.h>
 #include <string>
+#include <cstddef>
 #include <Processing.NDI.Lib.h>
 #include "node_api.h"
+
+#include "napi.h"
+
 
 // The three different formats of raw audio data supported by NDI utility functions
 typedef enum Grandiose_audio_format_e {

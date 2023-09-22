@@ -13,7 +13,7 @@
   limitations under the License.
 */
 
-#include <string>
+#include <cstddef>
 #include <Processing.NDI.Lib.h>
 
 #ifdef _WIN32
@@ -242,7 +242,7 @@ napi_value send(napi_env env, napi_callback_info info) {
   if (argc != (size_t) 1) REJECT_ERROR_RETURN(
     "Sender must be created with an object containing at least a 'name' property.",
     GRANDIOSE_INVALID_ARGS);
-  
+
   c->status = napi_typeof(env, args[0], &type);
   REJECT_RETURN;
   bool isArray;
@@ -269,12 +269,12 @@ napi_value send(napi_env env, napi_callback_info info) {
   c->name = (char *) malloc(namel + 1);
   c->status = napi_get_value_string_utf8(env, name, c->name, namel + 1, &namel);
   REJECT_RETURN;
-  
+
   // c->status = napi_get_named_property(env, config, "groups", &groups);
   // REJECT_RETURN;
   // c->status = napi_typeof(env, groups, &type);
   // REJECT_RETURN;
-  
+
   // if (type != napi_undefined && type != napi_string) REJECT_ERROR_RETURN(
   //   "Groups must be of type string or ....",
   //   GRANDIOSE_INVALID_ARGS);
@@ -302,7 +302,7 @@ napi_value send(napi_env env, napi_callback_info info) {
     c->status = napi_get_value_bool(env, clockAudio, &c->clockAudio);
     REJECT_RETURN;
   }
-  
+
   napi_value resource_name;
   c->status = napi_create_string_utf8(env, "Send", NAPI_AUTO_LENGTH, &resource_name);
   REJECT_RETURN;
@@ -789,4 +789,3 @@ napi_value sourcename(napi_env env, napi_callback_info info) {
 
   return result;
 }
-

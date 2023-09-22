@@ -24,7 +24,7 @@ The differences against the original codebase are:
 
 ## Installation
 
-Grandiose supports the Windows/x86, Windows/x64, macOS/x64, Linux/x86 and Linux/x64 platforms at this time only.
+Grandiose supports Windows (x64), MacOS (x64 & arm64) as well as Linux (x64 only). Additional platforms may be added in the future.
 
 Install [Node.js](http://nodejs.org/) for your platform. This software has been developed against the long term stable (LTS) release.
 
@@ -43,11 +43,13 @@ Grandiose is designed to be `require`d to use from your own application to provi
 A list of all currently available NDI(tm) sources available on the current local area network (or VLAN) can be retrieved. For example, to print a list of sources to the console, try:
 
 ```javascript
-const grandiose = require('grandiose');
+const { GrandioseFinder } = require('grandiose');
 
-grandiose.find()
-  .then(console.log)
-  .catch(console.error);
+const finder = new GrandioseFinder()
+setTimeout(() => {
+  // Log the discovered sources after 1000ms wait
+  console.log(finder.getCurrentSources())
+}, 1000)
 ```
 
 The result is an array, for example here are some local sources to machine :
@@ -61,9 +63,9 @@ The result is an array, for example here are some local sources to machine :
     urlAddress: '169.254.82.1:5963' } ]
 ```
 
-The find operation can be configured with an options object and a wait time in measured in milliseconds:
+The finder can be configured with an options object and a wait time in measured in milliseconds:
 
-    grandiose.find(<opts>, <wait_time>);
+    new GrandioseFinder(<opts>);
 
 The options are as follows:
 
@@ -253,7 +255,7 @@ Apart from the exceptions in the following section, this software is released un
 The software uses libraries provided under a royalty-free license from NewTek, Inc..
 
 * The `include` files are licensed separately by a NewTek under the MIT license.
-* The DLL and library are provided for convenience of installation and are covered by the NewTek license contained in the `lib` folder.
+* The NDI SDK library files are provided for convenience of installation and are covered by the NewTek license contained in the `lib` folder.
 
 ## Trademarks
 

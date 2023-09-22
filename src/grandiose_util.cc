@@ -18,7 +18,7 @@
 #include <stdlib.h>
 #include <chrono>
 #include <string>
-#include <algorithm>
+#include <cstddef>
 #include <Processing.NDI.Lib.h>
 #include "grandiose_util.h"
 #include "node_api.h"
@@ -87,8 +87,8 @@ napi_status checkStatus(napi_env env, napi_status status,
   }
 
   char errorCode[20];
-  throwStatus = napi_throw_error(env,
-    custom_itoa(errorInfo->error_code, errorCode, 10), errorInfo->error_message);
+  sprintf(errorCode, "%d", errorInfo->error_code);
+  throwStatus = napi_throw_error(env, errorCode, errorInfo->error_message);
   assert(throwStatus == napi_ok);
 
   return napi_pending_exception; // Expect to be cast to void
@@ -174,8 +174,8 @@ int32_t rejectStatus(napi_env env, carrier* c, const char* file, int32_t line) {
     }
     char* extMsg = (char *) malloc(sizeof(char) * c->errorMsg.length() + 200);
     sprintf(extMsg, "In file %s on line %i, found error: %s", file, line, c->errorMsg.c_str());
-    status = napi_create_string_utf8(env, custom_itoa(c->status, errorChars, 10),
-      NAPI_AUTO_LENGTH, &errorCode);
+    sprintf(errorChars, "%d", c->status);
+    status = napi_create_string_utf8(env, errorChars, NAPI_AUTO_LENGTH, &errorCode);
     FLOATING_STATUS;
     status = napi_create_string_utf8(env, extMsg, NAPI_AUTO_LENGTH, &errorMsg);
     FLOATING_STATUS;
@@ -279,4 +279,3 @@ napi_status makeNativeSource(napi_env env, napi_value source, NDIlib_source_t *r
   result->p_url_address = url;
   return napi_ok;
 }
-
